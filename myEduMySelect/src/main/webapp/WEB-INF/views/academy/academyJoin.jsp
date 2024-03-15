@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="kr">
 
@@ -82,23 +86,26 @@
               <li><a href="#">홍보게시판</a></li>
               <li><a href="#">매칭게시판</a></li>
               <li><a href="#">문의게시판</a></li>
-              <li><a href="/mypage">마이페이지</a></li>
+              <li><a href="/mypage" id="mypageBtn">마이페이지</a></li>
             </ul>
           </li>
 		  <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
 			<c:choose>
-				<c:when test="${not empty academyLoginVo}">
-					<li><a class="nav-link scrollto">${academyLoginVo.academyName}님 환영합니다.</a></li>
-					<li>
-						<form action="userAccount/logout" method="POST">
-							<button class="getstarted scrollto btn btn-aquamarine" type="submit">로그아웃</button>
-						</form>
-					</li>
-				</c:when>
-				<c:otherwise>
-					<li><a class="getstarted scrollto" href="/userAccount/login">로그인/회원가입</a></li>
-				</c:otherwise>
-			</c:choose>
+                <c:when test="${not empty commonLogin}">
+                    <li><a class="nav-link scrollto">
+                    <c:if test="${commonLogin.memberTypeId == 1}">회원 </c:if>
+                    <c:if test="${commonLogin.memberTypeId == 2}">학원 </c:if>
+                    ${commonLogin.name}님 환영합니다.</a></li>
+                    <li>
+                        <form action="${pageContext.request.contextPath}/useraccount/logout" method="POST">
+                            <button class="getstarted scrollto btn btn-aquamarine"type="submit">로그아웃</button>
+                        </form>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li><a class="getstarted scrollto" href="${pageContext.request.contextPath}/loginselect">로그인/회원가입</a></li>
+                </c:otherwise>
+            </c:choose>
 		</ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -127,214 +134,213 @@
 
     <!-- ======= academySignUp Form ======= -->
 
-    <div class="container">
-    	<div class="text-center">
-    		<h3 style="text-align:center">회원가입</h3>
-    	</div>
-    	<form id="joinForm">
-	        <div class="mt-3 row">
-		        <label for="academyId" class="col-sm-2 col-form-label">아이디</label>
-		        <div class="col-sm-10">
-		        	<input type="text" name="academyId" id="academyId" class="form-control" maxlength="12" placeholder="아이디 입력" required/>
-		        	<button type="button" id="findById">중복체크</button>
-		        	<p>(아이디는 6~12자의 영문, 숫자만 사용 가능)</p>
-		        </div>
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyPasswd" class="col-sm-2 col-form-label">비밀번호</label>
-		        <div class="col-sm-10">
-		        	<input type="password" name="academyPasswd" id="academyPasswd" class="form-control" maxlength="20" placeholder="비밀번호 입력" required/>
-		        	<p>(최소 하나의 대문자/소문자/숫자/특수문자 포함  8~20자 이내로 입력)</p>		        	
-		        </div>
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyPasswd2" class="col-sm-2 col-form-label">비밀번호 확인</label>
-		        <div class="col-sm-10">
-		        	<input type="password" name="academyPasswd2" id="academyPasswd2" class="form-control" maxlength="20" required/>		        	
-		        </div>
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyNumber" class="col-sm-2 col-form-label">사업자 등록번호</label>
-		        <div class="col-sm-10">
-		        	<input type="text" name="academyNumber" id="academyNumber" class="form-control" maxlength="10" placeholder="(-)하이픈 기호 없이 10자리 입력 후, 검색 버튼을 눌러주세요." required />
-		        	<button type="button" id="findByNumber">검색</button>
-		        </div>
-		    </div>		    
-		      
-	        <div class="mt-3 row">
-		        <label for="academyManagerName" class="col-sm-2 col-form-label">담당자 이름</label>
-		        <div class="col-sm-10">
-		        	<input type="text" name="academyManagerName" id="academyManagerName" class="form-control" maxlength="20" placeholder="아이디 입력" required/>		        	
-		        </div>
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyManagerEmail" class="col-sm-2 col-form-label">담당자 이메일</label>
-		        <div class="col-sm-10">
-		        	<input type="text" name="academyManagerEmail1" id="academyManagerEmail1" class="form-control" required/>
-		        	<strong>@</strong>
-		        	<input type="text" name="academyManagerEmail2" id="academyManagerEmail2" class="box" required/>
-		        	<select class="box" id="domain-list">
-			          <option value="custom">직접입력</option>
-			          <option value="naver.com">naver.com</option>
-			          <option value="google.com">google.com</option>
-			          <option value="hanmail.net">hanmail.net</option>
-			          <option value="nate.com">nate.com</option>
-			          <option value="kakao.com">kakao.com</option>
-			        </select>
-		        </div>
-		    </div>
-		    		     		    
-	        <div class="mt-3 row">
-		        <label for="academyManagerPhone" class="col-sm-2 col-form-label">담당자 전화번호</label>
-		        <div class="col-sm-10">
-		        	<input type="text" name="academyManagerPhone" id="academyManagerPhone" class="form-control" maxlength="11" placeholder="(-)하이픈 기호 없이 입력해주세요." required/>
-		        </div>
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyName" class="col-sm-2 col-form-label">학원명</label>
-		        <div class="col-sm-10">
-		        	<input type="text" name="academyName" id="academyName" class="form-control" required readonly/>		        	
-		        </div>
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyAddress" class="col-sm-2 col-form-label">학원주소</label>
-		        <div class="col-sm-10">
-		        	<label for="academyGuAddress">행정구역명</label>
-		        	<input type="text" name="academyGuAddress" id="academyGuAddress" class="form-control" required readonly/>
-		        	
-		        	<label for="academyRoadAddress">도로명주소</label>
-		        	<input type="text" name="academyRoadAddress" id="academyRoadAddress" class="form-control" maxlength="200" required readonly/>
-		        	
-		        	<label for="academyDongAddress">상세주소</label>
-		        	<input type="text" name="academyDongAddress" id="academyDongAddress" class="form-control" maxlength="20" required readonly/>
-		        </div>
-		    </div>		    
-		    
-	        <div class="mt-3 row">
-		        <label for="academyPhone" class="col-sm-2 col-form-label">학원 전화번호</label>
-		        <div class="col-sm-10">
-		        	<input type="text" name="academyPhone" id="academyPhone" class="form-control" maxlength="11" placeholder="(-)하이픈 기호 없이 입력해주세요." required/>
-		        	
-		        </div>
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyTargetSubject" class="col-sm-2 col-form-label">교습과목</label>
-		        <div class="col-sm-10">
-		        	<input type="text" name="academyTargetSubject" id="academyTargetSubject" class="form-control" maxlength="20" placeholder="교습과목을 입력해주세요" required/>
-		        </div>
-		    </div>		      
-		    		    
-	        <div class="mt-3 row">
-		        <label for="academyFee" class="col-sm-2 col-form-label">수강료</label>
-		        <div class="col-sm-10">
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyFee" id="fee1" value="10만원 미만" />
-		        		<label for="fee1" style="font-weight:300px;">10만원 미만</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyFee" id="fee2" value="10만원 이상 20만원 미만" />
-		        		<label for="fee2" style="font-weight:300px;">10만원 이상 20만원 미만</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyFee" id="fee3" value="20만원 이상 30만원 미만" />
-		        		<label for="fee3" style="font-weight:300px;">20만원 이상 30만원 미만</label>
-		        	</div>
-		        </div>
-		        <div class="col-sm-10">
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyFee" id="fee4" value="30만원 이상 40만원 미만" />
-		        		<label for="fee4" style="font-weight:300px;">30만원 이상 40만원 미만</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyFee" id="fee5" value="40만원 이상 50만원 미만" />
-		        		<label for="fee5" style="font-weight:300px;">40만원 이상 50만원 미만</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyFee" id="fee6" value="50만원 이상" />
-		        		<label for="fee6" style="font-weight:300px;">50만원 이상</label>
-		        	</div>
-		        </div>		        
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyTargetGrade" class="col-sm-2 col-form-label">대상 학년</label>
-		        <div class="col-sm-10">
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyTargetGrade" id="grade1" value="미취학" />
-		        		<label for="grade1" style="font-weight:300px;">미취학</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyTargetGrade" id="grade2" value="초등저학년" />
-		        		<label for="grade2" style="font-weight:300px;">초등저학년</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyTargetGrade" id="grade3" value="초등고학년" />
-		        		<label for="grade3" style="font-weight:300px;">초등고학년</label>
-		        	</div>
-		        </div>
-		        <div class="col-sm-10">
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyTargetGrade" id="grade4" value="중등" />
-		        		<label for="grade4" style="font-weight:300px;">중등</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyTargetGrade" id="grade5" value="고등" />
-		        		<label for="grade5" style="font-weight:300px;">고등</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="radio" class="academyTargetGrade" id="grade6" value="성인" />
-		        		<label for="grade6" style="font-weight:300px;">성인</label>
-		        	</div>
-		        </div>
-		    </div>
-		    
-	        <div class="mt-3 row">
-		        <label for="academyKeyword" class="col-sm-2 col-form-label">키워드 선택</label>
-		        <div class="col-sm-10">
-		        	<div class="col-sm-4">
-		        		<input type="checkbox" class="academyKeyword" id="academyKeyword1" value="기초부터"/>
-		        		<label for="academyKeyword1" style="font-weight:300px;">기초부터</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="checkbox" class="academyKeyword" id="academyKeyword2" value="심화수업"/>
-		        		<label for="academyKeyword2" style="font-weight:300px;">심화수업</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="checkbox" class="academyKeyword" id="academyKeyword3" value="친절한 강사"/>
-		        		<label for="academyKeyword3" style="font-weight:300px;">친절한 강사</label>
-		        	</div>		        	
-		        </div>
-		        <div class="col-sm-10">
-		        	<div class="col-sm-4">
-		        		<input type="checkbox" class="academyKeyword" id="academyKeyword4" value="꼼꼼한 관리"/>
-		        		<label for="academyKeyword4" style="font-weight:300px;">꼼꼼한 관리</label>
-		        	</div>
-		        	<div class="col-sm-4">
-		        		<input type="checkbox" class="academyKeyword" id="academyKeyword5" value="숙제 없음"/>
-		        		<label for="academyKeyword5" style="font-weight:300px;">숙제 없음</label>
-		        	</div>		        			        	
-		        </div>		        
-		    </div>
-		
-		    <div class="input_group">
-		       <span>
-		           <input type="submit" class="myButton" value="회원가입" id="submit-btn"/>
-		           <input type="reset"  class="myButton" value="다시작성" id="reset-btn"/>
-		       </span>
-		    </div>
-		    
-		</form>
-    	
+    <h1 style="text-align:center">회원가입</h1>
+    <form:form action="/academyInsert" modelAttribute="academySignUpDto" method="post" name="join" id="join">
+
+     <!-- 글로벌 에러 출력 -->
+     <spring:hasBindErrors name="academySignUpDto">
+            <c:forEach var="error" items="${errors.globalErrors}">
+                 <p class="error">${error.defaultMessage}</p>
+            </c:forEach>
+     </spring:hasBindErrors>
+
+      <div class="input_group">
+        <label for="academyId">아이디</label>
+        <form:input path="academyId" type="text" name="academyId" id="academyId" maxlength="12" placeholder="아이디 입력"/>
+        <form:errors path="academyId" cssClass="error" />
+        <button id="check-duplicate-btn">중복체크</button>
+        <label class="require" for="academyId">(아이디는 6~12자의 영문, 숫자만 사용 가능)</label>
+        <div id="duplicate-message"></div>
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyPasswd">비밀번호</label>
+        <input type="password" name="academyPasswd" id="academyPasswd" maxlength="20" placeholder="비밀번호 입력">
+        <label class="require" for="academyPasswd">(최소 하나의 대문자/소문자/숫자/특수문자 포함  8~20자 이내로 입력)</label>
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyPasswd2">비밀번호 확인</label>
+        <input type="password" name="academyPasswd2" id="academyPasswd2" maxlength="20">
+        <span id="password-check-message"></span>
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyNumber">사업자 등록번호</label>
+        <form:input path="academyNumber" type="text" name="academyNumber" id="academyNumber" maxlength="10" placeholder="(-)하이폰 기호 없이 입력해주세요."/>
+        <form:errors path="academyNumber" cssClass="error" />
+        <button id="check-duplicate">검색</button>
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyManagerName">담당자 이름</label>
+        <form:input path="academyManagerName" type="text" name="academyManagerName" id="academyManagerName" maxlength="20"/>
+        <form:errors path="academyManagerName" cssClass="error" />
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyManagerEmail1">담당자 이메일</label>
+        <form:input path="academyManagerEmail1" type="text" name="academyManagerEmail1" id="academyManagerEmail1"/>
+        <form:errors path="academyManagerEmail1" cssClass="error" />
+        <strong>@</strong>
+        <form:input path="academyManagerEmail2" type="text" class="box" name="academyManagerEmail2" id="academyManagerEmail2"/>
+        <form:errors path="academyManagerEmail2" cssClass="error" />
+        <select class="box" id="domain-list">
+          <option value="custom">직접입력</option>
+          <option value="naver.com">naver.com</option>
+          <option value="google.com">google.com</option>
+          <option value="hanmail.net">hanmail.net</option>
+          <option value="nate.com">nate.com</option>
+          <option value="kakao.com">kakao.com</option>
+        </select>
+      </div>
+      <br />
+        <div class="input_group">
+            <label for="academyManagerPhone">담당자 전화번호</label>
+        <form:input path="academyManagerPhone" type="text" name="academyManagerPhone" id="academyManagerPhone" maxlength="11" placeholder="(-)하이폰 기호 없이 입력해주세요."/>
+        <form:errors path="academyManagerPhone" cssClass="error" />
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyName">학원명</label>
+        <form:input path="academyName" type="text" name="academyName" id="academyName"  maxlength="100"/>
+        <form:errors path="academyName" cssClass="error" />
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyAddress">학원주소</label>
+	        <div class="input_group">
+	          <label for="academyGuAddress">행정구역명</label>
+	          <form:input path="academyGuAddress" type="text" name="academyGuAddress" id="academyGuAddress" maxlength="20" placeholder="행정구역명"/>
+	          <form:errors path="academyGuAddress" cssClass="error" />
+
+	          <label for="academyRoadAddress">도로명주소</label>
+	          <form:input path="academyRoadAddress" type="text" name="academyRoadAddress" id="academyRoadAddress" maxlength="200" placeholder="도로명주소"/>
+	          <form:errors path="academyRoadAddress" cssClass="error" />
+
+	          <label for="academyDongAddress">상세주소</label>
+	          <form:input path="academyDongAddress" type="text" name="academyDongAddress" id="academyDongAddress" maxlength="20" placeholder="상세주소"/>
+	          <form:errors path="academyDongAddress" cssClass="error" />
+	      	</div>
+      	<button id="search-address">검색</button>
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyPhone">학원 전화번호</label>
+        <form:input path="academyPhone" type="text" name="academyPhone" id="academyPhone" maxlength="11" placeholder="(-)하이폰 기호 없이 입력해주세요."/>
+        <form:errors path="academyPhone" cssClass="error" />
+      </div>
+      <br />
+      <div class="input_group">
+        <label for="academyTargetSubject">교습과목</label>
+        <form:input path="academyTargetSubject" type="text" name="academyTargetSubject" id="academyTargetSubject" maxlength="20" placeholder="교습과목을 입력해주세요"/>
+        <form:errors path="academyTargetSubject" cssClass="error" />
+      </div>
+      <br />
+      <div class="input_group">
+       <label for="academyFee" style="font-weight:bold;">수강료</label>
+       <form:errors path="academyFee" cssClass="error" />
+       <div class="row">
+           <div class="col-md-4">
+               <form:radiobutton path="academyFee" id="fee1" value="10만원 미만"/>
+               <label for="fee1" style="font-weight:300px;">10만원 미만</label>
+           </div>
+           <div class="col-md-4">
+               <form:radiobutton path="academyFee" id="fee2" value="10만원 이상 20만원 미만"/>
+               <label for="fee2" style="font-weight:300px;">10만원 이상 20만원 미만</label>
+           </div>
+           <div class="col-md-4">
+               <form:radiobutton path="academyFee" id="fee3" value="20만원 이상 30만원 미만"/>
+               <label for="fee3" style="font-weight:300px;">20만원 이상 30만원 미만</label>
+           </div>
+       </div>
+       <div class="row">
+           <div class="col-md-4">
+               <form:radiobutton path="academyFee" id="fee4" value="30만원 이상 40만원 미만"/>
+               <label for="fee4" style="font-weight:300px;">30만원 이상 40만원 미만</label>
+           </div>
+           <div class="col-md-4">
+               <form:radiobutton path="academyFee" id="fee5" value="40만원 이상 50만원 미만"/>
+               <label for="fee5" style="font-weight:300px;">40만원 이상 50만원 미만</label>
+           </div>
+           <div class="col-md-4">
+               <form:radiobutton path="academyFee" id="fee6" value="50만원 이상"/>
+               <label for="fee6" style="font-weight:300px;">50만원 이상</label>
+           </div>
+       </div>
+     </div>
+     <br />
+     <div class="input_group">
+       <label for="academyTargetGrade" style="font-weight:bold;">대상 학년</label>
+       <form:errors path="academyTargetGrade" cssClass="error" />
+       <div class="row">
+           <div class="col-md-4">
+               <form:radiobutton path="academyTargetGrade" id="grade1" value="미취학"/>
+               <label for="grade1" style="font-weight:300px;">미취학</label>
+           </div>
+           <div class="col-md-4">
+               <form:radiobutton path="academyTargetGrade" id="grade2" value="초등저학년"/>
+               <label for="grade2" style="font-weight:300px;">초등저학년</label>
+           </div>
+           <div class="col-md-4">
+               <form:radiobutton path="academyTargetGrade" id="grade3" value="초등고학년"/>
+               <label for="grade3" style="font-weight:300px;">초등고학년</label>
+           </div>
+       </div>
+       <div class="row">
+           <div class="col-md-4">
+               <form:radiobutton path="academyTargetGrade" id="grade4" value="중등"/>
+               <label for="grade4" style="font-weight:300px;">중등</label>
+           </div>
+           <div class="col-md-4">
+               <form:radiobutton path="academyTargetGrade" id="grade5" value="고등"/>
+               <label for="grade5" style="font-weight:300px;">고등</label>
+           </div>
+           <div class="col-md-4">
+               <form:radiobutton path="academyTargetGrade" id="grade6" value="성인"/>
+               <label for="grade6" style="font-weight:300px;">성인</label>
+           </div>
+       </div>
+      </div>
+     <br />
+     <div class="input_group">
+	    <label for="academyKeyword1" style="font-weight:bold;">키워드 선택 </label>
+	    <form:errors path="academyKeyword1" cssClass="error" />
+	    <div class="row">
+	        <div class="col-md-4">
+	            <form:checkbox path="academyKeyword1" id="keyword1" value="기초부터"/>
+	            <label for="keyword1" style="font-weight:300px;">기초부터</label>
+	        </div>
+	        <div class="col-md-4">
+	            <form:checkbox path="academyKeyword1" id="keyword2" value="중급반"/>
+	            <label for="keyword2" style="font-weight:300px;">중급반</label>
+	        </div>
+	        <div class="col-md-4">
+	            <form:checkbox path="academyKeyword1" id="keyword3" value="심화과정"/>
+	            <label for="keyword3" style="font-weight:300px;">심화과정</label>
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-md-4">
+	            <form:checkbox path="academyKeyword1" id="keyword4" value="속성강의"/>
+	            <label for="keyword4" style="font-weight:300px;">속성강의</label>
+	        </div>
+	        <div class="col-md-4">
+	            <form:checkbox path="academyKeyword1" id="keyword5" value="꼼꼼한 관리"/>
+	            <label for="keyword5" style="font-weight:300px;">꼼꼼한 관리</label>
+	        </div>
+	    </div>
+	</div>
+
+    <br />
+    <div class="input_group">
+       <span>
+           <input type="submit" class="myButton" value="회원가입" id="submit-btn"/>
+           <input type="reset" value="다시작성" class="myButton" id="reset-btn"/>
+       </span>
     </div>
-	<!-- === End academySignUp Form === -->
-    
+    <br />
+    </form:form>
 
     <!-- ======= Contact Section ======= -->
 

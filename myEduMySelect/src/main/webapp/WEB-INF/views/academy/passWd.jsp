@@ -71,21 +71,22 @@
             </ul>
           </li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-		  <li><a class="getstarted scrollto"> 
-		  	  <c:choose>
-				<c:when test="${not empty academyLoginVo}">
-					<form action="userAccount/logout" method="POST">
-						<button type="submit">로그아웃</button>
-					</form>
-				</c:when>
-				<c:otherwise>
-					<form action="userAccount/login" method="POST">
-						<button type="submit">로그인/회원가입</button>
-					</form>
-				</c:otherwise>
-			  </c:choose>
-			  </a>
-		  </li>
+		  <c:choose>
+              <c:when test="${not empty commonLogin}">
+                  <li><a class="nav-link scrollto">
+                  <c:if test="${commonLogin.memberTypeId == 1}">회원 </c:if>
+                  <c:if test="${commonLogin.memberTypeId == 2}">학원 </c:if>
+                  ${commonLogin.name}님 환영합니다.</a></li>
+                  <li>
+                      <form action="${pageContext.request.contextPath}/useraccount/logout" method="POST">
+                          <button class="getstarted scrollto btn btn-aquamarine"type="submit">로그아웃</button>
+                      </form>
+                  </li>
+              </c:when>
+              <c:otherwise>
+                  <li><a class="getstarted scrollto" href="${pageContext.request.contextPath}/loginselect">로그인/회원가입</a></li>
+              </c:otherwise>
+          </c:choose>
         </ul>     
         <ul>
           <li><a class="nav-link scrollto active" href="#mypage">나의 정보</a></li>

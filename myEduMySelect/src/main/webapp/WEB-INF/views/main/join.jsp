@@ -172,26 +172,26 @@
 
 개인정보 취급방침은 법령이나 서비스의 변경사항에 따라 수시로 변경될 수 있습니다.
 변경된 개인정보 취급방침은 서비스 내 공지사항을 통해 공지될 예정입니다.
-            </textarea>            
+            </textarea>
         </div>
         <form style="width: 100%; text-align: center; margin: 1rem 0;">
             <p><b>개인정보 취급방침에 동의하십니까?</b></p>
             <div class="radio-wrapper">
                 <label style="margin-left: 0.5rem; color: black;">
-                    <input type="radio" name="privacy" value="agree" checked> 동의함 
+                    <input type="radio" name="privacy" value="agree" checked> 동의함
                 </label>
                 <label style="margin-left: 0.5rem; color: black;">
-                    <input type="radio" name="privacy" value="disagree"> 동의안함 
+                    <input type="radio" name="privacy" value="disagree"> 동의안함
                 </label>
             </div>
         </form>
          <!-- 버튼 컨테이너 추가 -->
  <div class="button-container">
     <a href="/useraccount/join/personal" class="custom-button">개인 회원가입 페이지로 이동</a>
-    <a href="/useraccount/join/academy" class="custom-button">학원 회원가입 페이지로 이동</a>
+    <a href="/userAccount/join/academy" class="custom-button">학원 회원가입 페이지로 이동</a>
 </div>
 
-       
+
     </div>
      </form>
 
@@ -313,6 +313,7 @@
 		src="/resources/include/assets/vendor/php-email-form/validate.js"></script>
 
 	<!-- Template Main JS File -->
+	<script src="/resources/include/academy/jquery-3.7.1.min.js"></script>
 	<script src="/resources/include/assets/js/main.js"></script>
 </body>
 </html>

@@ -43,13 +43,23 @@
   * Template URL: https://bootstrapmade.com/MyEduMySelect-free-bootstrap-html-template-corporate/
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
-  ======================================================== --> 
-  <style>
-        .error { display: block; padding: 10px 0px; font-size: 18px; color: #dc3545; }
-  </style>
-  
+  ======================================================== -->
+
   <link rel="stylesheet" type="text/css" href="/resources/include/assets/css/academySignUp.css">
-    
+
+  <script>
+  	window.onload = function() {
+  		var confirmMessage = "${confirmMessage}";
+  		if (confirmMessage) {
+  			var result = confirm(confirmMessage);
+  			if(result) {
+  				window.location.href = "/academyaccount/login"; // 확인 눌렀을 경우 로그인 페이지로 이동
+  			} else {
+  				window.location.href = "/";
+  			}
+  		}
+  	};
+  </script>
 </head>
 
 <body>
@@ -78,16 +88,19 @@
           </li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
 		  <c:choose>
-              <c:when test="${not empty academyLoginVo}">
-                  <li><a class="nav-link scrollto">${academyLoginVo.academyName}님 환영합니다.</a></li>
+              <c:when test="${not empty commonLogin}">
+                  <li><a class="nav-link scrollto">
+                  <c:if test="${commonLogin.memberTypeId == 1}">회원 </c:if>
+                  <c:if test="${commonLogin.memberTypeId == 2}">학원 </c:if>
+                  ${commonLogin.name}님 환영합니다.</a></li>
                   <li>
-                      <form action="userAccount/logout" method="POST">
+                      <form action="${pageContext.request.contextPath}/useraccount/logout" method="POST">
                           <button class="getstarted scrollto btn btn-aquamarine"type="submit">로그아웃</button>
                       </form>
                   </li>
               </c:when>
               <c:otherwise>
-                  <li><a class="getstarted scrollto" href="userAccount/login">로그인/회원가입</a></li>
+                  <li><a class="getstarted scrollto" href="${pageContext.request.contextPath}/loginselect">로그인/회원가입</a></li>
               </c:otherwise>
           </c:choose>
         </ul>

@@ -65,11 +65,11 @@
 		<div class="container d-flex align-items-center">
 
 			<h1 class="logo me-auto">
-				<a href="/">MyEdu<br />MySelect
+				<a href="${pageContext.request.contextPath}/">MyEdu<br />MySelect
 				</a>
 			</h1>
 			<!-- Uncomment below if you prefer to use an image logo -->
-			<!-- <a href="index.html" class="logo me-auto"><img src="/resources/include/assets/img/logo.png" alt="" class="img-fluid"></a>-->
+			<!-- <a href="${pageContext.request.contextPath}/" class="logo me-auto"><img src="/resources/include/assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
 			<nav id="navbar" class="navbar">
 				<ul>
@@ -81,27 +81,32 @@
 						<ul>
 							<li><a href="#">자유게시판</a></li>
 							<li><a href="#">홍보게시판</a></li>
-							<li><a href="#">매칭게시판</a></li>
+							<li><a href="${pageContext.request.contextPath}/matching/">매칭게시판</a></li>
 							<li><a href="/">공지게시판</a></li>
-							<li><a href="/mypage" id="mypageBtn">마이페이지</a></li>
+							<c:if test="${commonLogin.memberTypeId == 1}">
+							    <li><a href="${pageContext.request.contextPath}/myPage" id="mypageBtn">회원마이페이지</a></li>
+							</c:if>
+                            <c:if test="${commonLogin.memberTypeId == 2}">
+                                <li><a href="${pageContext.request.contextPath}/academyaccount/mypage" id="mypageBtn">학원마이페이지</a></li>
+                            </c:if>
 						</ul></li>
 					<li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-					<li>
-					<a class="getstarted scrollto"> 
-	                  	<c:choose>
-							<c:when test="${not empty personalLoginVO || not empty academyLoginVo}">
-								<form action="userAccount/logout" method="POST">
-									<button type="submit">로그아웃</button>
-								</form>
-							</c:when>
-							<c:otherwise>
-								<form action="userAccount/login" method="POST">
-									<button type="submit">로그인/회원가입</button>
-								</form>
-							</c:otherwise>
-						</c:choose>
-					</a>
-               		</li>
+					<c:choose>
+                        <c:when test="${not empty commonLogin}">
+                            <li><a class="nav-link scrollto">
+                            <c:if test="${commonLogin.memberTypeId == 1}">회원 </c:if>
+                            <c:if test="${commonLogin.memberTypeId == 2}">학원 </c:if>
+                            ${commonLogin.name}님 환영합니다.</a></li>
+                            <li>
+                                <form action="${pageContext.request.contextPath}/useraccount/logout" method="POST">
+                                    <button class="getstarted scrollto btn btn-aquamarine"type="submit">로그아웃</button>
+                                </form>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a class="getstarted scrollto" href="${pageContext.request.contextPath}/loginselect">로그인/회원가입</a></li>
+                        </c:otherwise>
+                    </c:choose>
 				</ul>
 				<i class="bi bi-list mobile-nav-toggle"></i>
 			</nav>

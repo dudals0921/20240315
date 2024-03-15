@@ -271,7 +271,7 @@ if (!academyLoginVo || !personalLoginVO) {
 	document.getElementById("mypageBtn").addEventListener("click", function(event) {
     event.preventDefault();
     alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-    window.location.href = "/userAccount/login";
+    window.location.href = "/academyaccount/login";
 });
 }
 
@@ -280,7 +280,7 @@ document.getElementById("mypageBtn").addEventListener("click", function(event) {
     if (!academyLoginVo) {
 		event.preventDefault();
         alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-        window.location.href = "/userAccount/login";	
+        window.location.href = "/academyaccount/login";
 	}	        
 });
 

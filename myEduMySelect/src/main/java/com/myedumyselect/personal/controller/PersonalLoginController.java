@@ -2,6 +2,8 @@ package com.myedumyselect.personal.controller;
 
 import java.util.Date;
 
+import com.myedumyselect.auth.SessionInfo;
+import com.myedumyselect.auth.vo.LoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,11 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 //@RequestMapping("/personal/*")
 @Slf4j
-@SessionAttributes("personalLogin")
+@SessionAttributes(SessionInfo.COMMON)
 public class PersonalLoginController {
 
 	@Setter(onMethod_ = @Autowired)
 	private PersonalLoginService personalLoginService;
+	private PersonalLoginService personalLoginService1;
 
 	@GetMapping("/useraccount/login")
 	public String loginForm() {
@@ -36,7 +39,7 @@ public class PersonalLoginController {
 	}
 
 	@PostMapping("/useraccount/login")
-	public String loginProcess(PersonalLoginVO login, Model model, RedirectAttributes ras, HttpSession session) {
+	public String loginProcess(LoginVo loginVo, Model model, RedirectAttributes ras, HttpSession session) {
 		// POST 방식으로 /useraccount/login 엔드포인트에 대한 요청을 처리하는 메서드이다.
 		// 요청에서 PersonalLoginVO 객체, Model 객체, RedirectAttributes 객체, HttpSession 객체를 받는다
 		Integer loginAttempts = (Integer) session.getAttribute("loginAttempts");
@@ -69,11 +72,12 @@ public class PersonalLoginController {
 		// 로그인 시도 횟수를 확인하고, 값이 없으면 0으로 초기화한다.
 
 		// 로그인 시도
-		PersonalLoginVO personalLogin = personalLoginService.loginProcess(login);
+		PersonalLoginVO personalLogin = personalLoginService.loginProcess(new PersonalLoginVO(loginVo.getId(), loginVo.getPasswd()));
 		// PersonalLoginService를 통해 로그인을 시도한다.
 
 		if (personalLogin != null) {
-			model.addAttribute("personalLogin", personalLogin);
+			loginVo.setName(personalLogin.getPersonalName());
+			model.addAttribute(SessionInfo.COMMON, loginVo);
 			session.removeAttribute("loginAttempts"); // 로그인이 성공한 경우, 모델에 로그인 정보를 추가하고, 세션에서 로그인 시도 횟수 속성을 제거한다.
 		} else {
 			loginAttempts++;
@@ -102,14 +106,6 @@ public class PersonalLoginController {
 				// 로그인 시도 횟수가 5회 미만인 경우, 실패 메시지와 함께 로그인 페이지로 리다이렉트한다.
 		}
 		return "redirect:/useraccount/login"; // 로그인이 성공하거나 실패한 후에는 항상 로그인 페이지로 리다이렉트한다.
-	}
-
-	// 로그아웃
-	@GetMapping("/useraccount/logout")
-	public String logout(SessionStatus sessionStatus) {
-		log.info("personal 로그아웃 처리");
-		sessionStatus.setComplete();
-		return "redirect:/useraccount/login";
 	}
 
 	// 개인회원 가입 페이지
@@ -151,7 +147,7 @@ public class PersonalLoginController {
 	@GetMapping("/useraccount/join")
 	public String signUp() {
 		// 회원가입 페이지로 이동
-		return "/personal/join"; // join.jsp
+		return "/main/join"; // join.jsp
 	}
 
 	@GetMapping("/useraccount/join/complete")
@@ -169,15 +165,18 @@ public class PersonalLoginController {
 	// 마이페이지
 	@GetMapping("/myPage")
 	public String personalMyPage(HttpSession session, RedirectAttributes redirectAttributes, Model model) {
-		PersonalLoginVO personalLoginVO = (PersonalLoginVO) session.getAttribute("personalLogin");
+		LoginVo loginVo = (LoginVo) session.getAttribute(SessionInfo.COMMON);
 		// 세션에서 personalLogin 속성을 가져옴 (세션에서 로그인 정보를 가져와서 personalLoginVO 객체로 캐스팅)
 
 		log.info("myPage 호출성공");
 
-		if (personalLoginVO == null) {
+		if (loginVo == null) {
 			redirectAttributes.addFlashAttribute("errorMsg", "로그인 후 이용해주세요.");
 			return "redirect:/useraccount/login";
 		}
+
+		// TODO: findById 필요!
+		PersonalLoginVO personalLoginVO = personalLoginService.loginProcess(new PersonalLoginVO(loginVo.getId(), loginVo.getPasswd()));
 
 		model.addAttribute("personalLoginVO", personalLoginVO); // model personalLoginVO라는 이름으로 personalLoginVO 객체 추가
 
@@ -194,11 +193,14 @@ public class PersonalLoginController {
 	public String personalUpdate(@ModelAttribute PersonalLoginVO personalLogin, HttpSession session,
 			RedirectAttributes redirectAttributes) {
 		// 세션에서 personalLogin 속성을 가져옴
-		PersonalLoginVO sessionPersonalLogin = (PersonalLoginVO) session.getAttribute("personalLogin");
+		LoginVo loginVo = (LoginVo) session.getAttribute(SessionInfo.COMMON);
 
 		// 세션에서 가져온 personalLogin 객체에 업데이트된 정보를 적용,결론적으로 VO를 들고 오는구조 이메일,주소,전화번호,비밀번호를
 		// 수정할
 		// 수 있다
+		// TODO: findById 필요!
+		PersonalLoginVO sessionPersonalLogin = personalLoginService.loginProcess(new PersonalLoginVO(loginVo.getId(), loginVo.getPasswd()));
+
 		sessionPersonalLogin.setPersonalEmail(personalLogin.getPersonalEmail());
 		sessionPersonalLogin.setPersonalAddress(personalLogin.getPersonalAddress());
 		sessionPersonalLogin.setPersonalPhone(personalLogin.getPersonalPhone());

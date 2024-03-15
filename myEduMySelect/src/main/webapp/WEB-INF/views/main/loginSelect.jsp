@@ -73,7 +73,6 @@
               <li><a href="/mypage">마이페이지</a></li>
             </ul>
           </li>
-          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
           <c:choose>
               <c:when test="${not empty commonLogin}">
                   <li><a class="nav-link scrollto">
@@ -115,54 +114,15 @@
    </section><!-- End Hero -->
 
   <main id="main">
+    <!-- ======= loginSelect Form ======= -->
 
-    <!-- ======= academySignUp Form ======= -->
+    <div>
+        <a href="/useraccount/login">회원 로그인 페이지</a>
+    </div>
 
-    <h1 style="text-align:center">로그인</h1>
-    <c:if test="${empty commonLogin}">
-        <form:form action="/academyaccount/login" modelAttribute="loginVo" method="POST">
-            <h1>학원 로그인 페이지</h1>
-            <!-- 글로벌 에러 출력 -->
-            <spring:hasBindErrors name="userAccountLoginDto">
-                <c:forEach var="error" items="${errors.globalErrors}">
-                    <p class="error">${error.defaultMessage}</p>
-                </c:forEach>
-            </spring:hasBindErrors>
-
-                <!-- memberTypeId -->
-                <input type="hidden" name="memberTypeId" value="2">
-
-                <!-- id -->
-                <form:input path="id" type="text" name="id" id="id"
-                    placeholder="아이디를 입력해주세요"/> <label for="id">아이디</label>
-                <form:errors path="id" cssClass="error" />
-            </div>
-            <div>
-                <!-- passwd -->
-                <form:input path="passwd" type="password" name="passwd" id="passwd"
-                    placeholder="비밀번호를 입력해주세요"/> <label for="passwd">비밀번호</label>
-                <form:errors path="passwd" cssClass="error" />
-            </div>
-            <button type="submit" id="loginBtn">로그인</button>
-        </form:form>
-   	</c:if>
-
-   	<c:if test="${not empty commonLogin}">
-        <h3>${commonLogin.name}님 환영합니다.</h3>
-        <form method="POST" action="/useraccount/logout" id="joinForm">
-            <button class="join-button" type="submit">로그아웃</button>
-        </form>
-    </c:if>
-
-   	<form method="GET" action="/academyaccount/join" id="joinForm">
-		<button class="join-button" type="submit">회원가입하러가기</button>
-	</form>
-
-	<form method="GET" action="/" id="homeForm">
-		<button class="home-button" type="submit">홈으로 가기</button>
-	</form>
-
-    <!-- ======= Contact Section ======= -->
+    <div>
+        <a href="/academyaccount/login">학원 로그인 페이지</a>
+    </div>
 
   </main><!-- End #main -->
 

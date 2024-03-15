@@ -87,8 +87,22 @@
 							<li><a href="#">문의게시판</a></li>
 							<li><a href="#">마이페이지</a></li>
 						</ul></li>
-					<li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-					<li><a class="getstarted scrollto" href="/signUp">로그인/회원가입</a></li>
+					<c:choose>
+                        <c:when test="${not empty commonLogin}">
+                            <li><a class="nav-link scrollto">
+                            <c:if test="${commonLogin.memberTypeId == 1}">회원 </c:if>
+                            <c:if test="${commonLogin.memberTypeId == 2}">학원 </c:if>
+                            ${commonLogin.name}님 환영합니다.</a></li>
+                            <li>
+                                <form action="${pageContext.request.contextPath}/useraccount/logout" method="POST">
+                                    <button class="getstarted scrollto btn btn-aquamarine"type="submit">로그아웃</button>
+                                </form>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a class="getstarted scrollto" href="${pageContext.request.contextPath}/loginselect">로그인/회원가입</a></li>
+                        </c:otherwise>
+                    </c:choose>
 
 				</ul>
 				<i class="bi bi-list mobile-nav-toggle"></i>
